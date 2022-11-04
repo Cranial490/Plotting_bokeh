@@ -8,16 +8,12 @@ from bokeh.transform import factor_cmap
 from bokeh.models import ColumnDataSource
 from bokeh.palettes import Spectral6, Spectral10
 from selenium.webdriver import Chrome, ChromeOptions
-
+from bokeh.io import export_png, export_svg
 class Plot:
     def __init__(self) -> None:
         self.colorpalette = Spectral10
         options = ChromeOptions()
-        web_driver = Chrome(executable_path='/home/cranial/chromedriver')
-        # options.add_argument('--headless')
-        # options.add_argument("--window-size=2000x2000")
-        # metrics = { "deviceMetrics": { "pixelRatio": 1.0 } }
-        # options.add_experimental_option("mobileEmulation", metrics)
+        self.web_driver = Chrome(executable_path='/home/cranial/chromedriver')
 
     def scatter(self, x , y, categories = None, palette=None):
         p = figure(plot_width=1000, plot_height=800, title="Dummy Data")
@@ -27,7 +23,6 @@ class Plot:
             p.circle(x = 'x', y = 'y', color='color', fill_alpha=0.4, size=8, legend_group='label', source=source)
         else:
             p.circle(x , y , fill_alpha=0.4, size=8)
-        show(p)
         return p
 
     def create_color_map(self, categories, palette=None):
@@ -44,18 +39,16 @@ class Plot:
             idx += 1
         return [colorMap[x] for x in categories]
 
+    def output_plot(self, p, filename="plot", type="html"):
+        if type == "png":
+            export_png(p, filename=filename+'.'+type, webdriver=self.web_driver)
+        elif type == "svg":
+            export_svg(p, filename=filename+'.'+type, webdriver=self.web_driver)
+        else:
+            output_file(filename =filename+'.'+type, title="Static HTML file")
+            save(p)
+    def show(self, plot):
+        show(plot)
 
-dh = DataHandler()
-data = dh.read_csv("dummyData1.csv")
-data = data[1:]
-categories = [row[0] for row in data]   
-id = [row[1] for row in data]
-x=[row[2] for row in data]
-y=[row[3] for row in data]
-
-plt = Plot()
-plt.scatter(x,y, categories)
     
-    # from bokeh.io import export_png
-
-    # export_png(p, filename="out.png", webdriver=web_driver)
+    
