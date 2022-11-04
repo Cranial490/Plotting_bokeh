@@ -1,26 +1,23 @@
 import itertools
-from turtle import color
+from selenium.webdriver import Chrome
+
 from bokeh.plotting import figure, show, save, output_file
 from bokeh.io import export_svg, export_png
-import numpy as np
-from datamanager import DataHandler
-from bokeh.transform import factor_cmap
 from bokeh.models import ColumnDataSource
-from bokeh.palettes import Spectral6, Spectral10
-from selenium.webdriver import Chrome, ChromeOptions
-from bokeh.io import export_png, export_svg
+from bokeh.palettes import Spectral10
+
+
 class Plot:
     def __init__(self) -> None:
         self.colorpalette = Spectral10
-        options = ChromeOptions()
         self.web_driver = Chrome(executable_path='/home/cranial/chromedriver')
 
-    def scatter(self, x , y, categories = None, palette=None):
-        p = figure(plot_width=1000, plot_height=800, title="Dummy Data")
+    def scatter(self, x , y, categories = None, palette=None, width = 1000, height = 800, title="Dummy Data"):
+        p = figure(plot_width=width, plot_height=height, title=title)
         if categories:
             categorycolors = self.create_color_map(categories)
             source = ColumnDataSource(dict(x=x, y= y, color=categorycolors, label=categories))
-            p.circle(x = 'x', y = 'y', color='color', fill_alpha=0.4, size=8, legend_group='label', source=source)
+            p.circle(x = 'x', y = 'y', color='color', fill_alpha=0.8, size=8, legend_group='label', source=source)
         else:
             p.circle(x , y , fill_alpha=0.4, size=8)
         return p
@@ -47,6 +44,7 @@ class Plot:
         else:
             output_file(filename =filename+'.'+type, title="Static HTML file")
             save(p)
+
     def show(self, plot):
         show(plot)
 
