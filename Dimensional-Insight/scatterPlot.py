@@ -8,9 +8,9 @@ from bokeh.palettes import Spectral10
 
 
 class Plot:
-    def __init__(self) -> None:
+    def __init__(self, chromepath = '/home/cranial/chromedriver') -> None:
         self.colorpalette = Spectral10
-        self.web_driver = Chrome(executable_path='/home/cranial/chromedriver')
+        self.web_driver = Chrome(executable_path=chromepath)
 
     def scatter(self, x , y, categories = None, palette=None, width = 1000, height = 800, title="Dummy Data"):
         p = figure(plot_width=width, plot_height=height, title=title)
@@ -47,6 +47,3 @@ class Plot:
 
     def show(self, plot):
         show(plot)
-
-    
-    

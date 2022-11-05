@@ -24,7 +24,6 @@ class DataHandler:
             csvwriter.writerows(data)
 
     def read_csv(self, filename):
-        #TODO Handle file not exist
         try:
             with open(filename) as csvfile:
                 csvData = list(csv.reader(csvfile, delimiter=','))
@@ -36,8 +35,8 @@ class DataHandler:
     def generate_dummy_data(self,filename, datapoints = 10000 , header = ["Category", "ID", "X", "Y"], categories = ["Alpha", "Beta", "Gamma", "Delta"]):
         filename= filename
         header = header
-        x_max = 10000
-        y_max = 10000
+        x_max = 100
+        y_max = 100
         categories = categories
         dummyData = self.create_data(x_max, y_max, categories, datapoints)
         self.write_csv(dummyData, header, filename)

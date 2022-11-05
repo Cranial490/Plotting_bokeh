@@ -3,28 +3,39 @@ from datamanager import DataHandler
 from scatterPlot import Plot
 import argparse
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='Generates scatter plot for a csv file')
 parser.add_argument('--filename', type=str, required=True, help='Input CSV file name')
 parser.add_argument('--outputfile', type=str, required=True, help='output file name for the plot')
-parser.add_argument('--outputtype', type=str, required=False, help='export type for plot')
-
+parser.add_argument('--outputtype', type=str, required=False, help='export type options HTML, PNG, SVG')
+parser.add_argument('--chromepath', type=str, required=False, help='path to chromedriver executable')
+parser.add_argument('-s', action='store_true', help='Flag to visualize plot')
 args = parser.parse_args()
 
 dh = DataHandler()
 
-dh.generate_dummy_data("dummy.csv", datapoints= 100000, categories=["A", "B", "C", "D", "E", "F", "G"])
+# Generate CSV file with random data
+dh.generate_dummy_data("dummy.csv", categories=["A", "B", "C"], datapoints=100)
 
+#Read .csv file and process
 data = dh.read_csv(args.filename)
+#Remove header
 data = data[1:]
-categories = [row[0] for row in data]   
+#Process Data
+categories = [row[0] for row in data]
 id = [row[1] for row in data]
 x=[row[2] for row in data]
 y=[row[3] for row in data]
 
-plt = Plot()
+if args.chromepath:
+    plt = Plot(args.chromepath)
+else:
+    plt = Plot()
+
 p = plt.scatter(x,y, categories)
 
 if args.outputtype:
-    plt.output_plot(p, args.outputfile, args.outputtype)
+    plt.output_plot(p, args.outputfile, args.outputtype.lower())
+    if args.s:
+        plt.show(p)
 else:
     plt.show(p)
