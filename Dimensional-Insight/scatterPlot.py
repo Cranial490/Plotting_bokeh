@@ -16,10 +16,10 @@ class Plot:
         p = figure(plot_width=width, plot_height=height, title=title)
         if categories:
             categorycolors = self.create_color_map(categories)
-            source = ColumnDataSource(dict(x=x, y= y, color=categorycolors, label=categories))
+            source = ColumnDataSource(dict(x=x, y=y, color=categorycolors, label=categories))
             p.circle(x = 'x', y = 'y', color='color', fill_alpha=0.8, size=8, legend_group='label', source=source)
         else:
-            p.circle(x , y , fill_alpha=0.4, size=8)
+            p.circle(x , y , fill_alpha=0.8, size=8)
         return p
 
     def create_color_map(self, categories, palette=None):
