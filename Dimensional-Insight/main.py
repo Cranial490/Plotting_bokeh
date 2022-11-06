@@ -4,8 +4,8 @@ from plotlib import Plot
 import argparse
 
 parser = argparse.ArgumentParser(description='Generates scatter plot for a csv file')
-parser.add_argument('--filename', type=str, required=True, help='Input CSV file name')
-parser.add_argument('--outputfile', type=str, required=False, help='output file name for the plot')
+parser.add_argument('--filename', type=str, required=True, help='input CSV file name')
+parser.add_argument('--outputfile', type=str, required=False, help='file name for the plot')
 parser.add_argument('--outputtype', type=str, required=False, help='export type options HTML, PNG, SVG')
 parser.add_argument('--chromepath', type=str, required=False, help='path to chromedriver executable')
 parser.add_argument('-s', action='store_true', help='Flag to visualize plot')
