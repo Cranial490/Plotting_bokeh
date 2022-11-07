@@ -4,7 +4,7 @@ from plotlib import Plot
 import argparse
 
 parser = argparse.ArgumentParser(description='Generates scatter plot for a csv file')
-parser.add_argument('--filename', type=str, required=True, help='input CSV file name')
+parser.add_argument('--filename', type=str, required=True, help='input CSV or TXT file name')
 parser.add_argument('--outputfile', type=str, required=False, help='file name for the plot')
 parser.add_argument('--outputtype', type=str, required=False, help='export type options HTML, PNG, SVG')
 parser.add_argument('--chromepath', type=str, required=False, help='path to chromedriver executable')
@@ -20,7 +20,7 @@ if args.g:
     dh.generate_dummy_data("dummy.csv", categories=["A", "B", "C"], datapoints=10000)
 
 #Read .csv file and process
-data = dh.read_csv(args.filename)
+data = dh.read_data(args.filename)
 #Remove header
 data = data[1:]
 #Process Data

@@ -2,6 +2,8 @@ import uuid
 import random
 import csv
 
+from pandas import read_csv
+
 class DataHandler:
     def __init__(self, seed=5) -> None: 
         random.seed(seed)
@@ -30,6 +32,27 @@ class DataHandler:
             return csvData
         except OSError as e:
             print(e)
+            exit()
+    
+    def read_txt(self, filename):
+        txtdata = []
+        try:
+            with open(filename) as file:
+                for line in file:
+                    txtdata.append(line.rstrip().split(','))
+            return txtdata
+        except OSError as e:
+            print(e)
+            exit()
+
+    def read_data(self, filename):
+        format = filename.split(".")[-1]
+        if format == "csv":
+            return self.read_csv(filename)
+        elif format == "txt":
+            return self.read_txt(filename)
+        else:
+            print("Incorrect file fomat\nFile needs to be in .csv or .txt format")
             exit()
 
     def generate_dummy_data(self,filename, datapoints = 10000 , header = ["Category", "ID", "X", "Y"], categories = ["Alpha"], x_max=10000, y_max=10000):
