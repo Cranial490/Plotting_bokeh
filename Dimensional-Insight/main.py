@@ -1,7 +1,7 @@
 import argparse
+
 from datamanager import DataHandler
 from plotlib import Plot
-import argparse
 
 parser = argparse.ArgumentParser(description='Generates scatter plot for a csv file')
 parser.add_argument('--filename', type=str, required=True, help='input CSV or TXT file name')
@@ -17,9 +17,9 @@ dh = DataHandler()
 
 # Generate CSV file with random data
 if args.g:
-    dh.generate_dummy_data("dummy.csv", categories=["A", "B", "C"], datapoints=10000)
+    dh.generate_dummy_data("dummy.csv", categories=["A", "G", "B", "C"], datapoints=10000)
 
-#Read .csv file and process
+#Read csv or txt file and process
 data = dh.read_data(args.filename)
 #Remove header
 data = data[1:]
@@ -33,12 +33,11 @@ if args.chromepath:
     plt = Plot(args.chromepath)
 else:
     plt = Plot()
-
+    
+#Generate scatter plot
 p = plt.scatter(x,y, categories=categories)
 
 if args.outputtype:
     plt.output_plot(p, args.outputfile, args.outputtype.lower())
-    if args.s:
-        plt.show(p)
-else:
+if args.s:
     plt.show(p)

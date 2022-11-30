@@ -4,6 +4,8 @@ from selenium.webdriver import Chrome
 from bokeh.plotting import figure, show, save, output_file
 from bokeh.io import export_svg, export_png
 from bokeh.models import ColumnDataSource
+from bokeh.models import Range1d
+
 from bokeh.palettes import Spectral10
 
 
@@ -17,10 +19,16 @@ class Plot:
         self.colorpalette = Spectral10
         self.web_driver = Chrome(executable_path=chromepath)
 
-    def scatter(self, x , y, categories = None, palette=None):
+    def scatter(self, x , y, categories = None, x_label = "X axis", y_label = "Y axis", x_range = None, y_range = None, palette=None):
         p = figure(plot_width=self.width, plot_height=self.height, title=self.title)
+        if x_range:
+            p.x_range = Range1d(x_range[0], x_range[1])
+        if y_range:
+            p.y_range = Range1d(y_range[0], y_range[1])
+        p.xaxis.axis_label = x_label
+        p.yaxis.axis_label = y_label
         if categories:
-            categorycolors = self.__create_color_map(categories)
+            categorycolors = self.__create_color_map(categories, palette)
             source = ColumnDataSource(dict(x=x, y=y, color=categorycolors, label=categories))
             p.circle(x = 'x', y = 'y', color='color', fill_alpha=self.alpha, size=self.size, legend_group='label', source=source)
         else:

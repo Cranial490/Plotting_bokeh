@@ -2,13 +2,11 @@ import uuid
 import random
 import csv
 
-from pandas import read_csv
-
 class DataHandler:
     def __init__(self, seed=5) -> None: 
         random.seed(seed)
 
-    def create_data(self, x_max, y_max, categories, datapoints):  
+    def generate_data(self, x_max, y_max, categories, datapoints):  
         data = []
         for idx in range(datapoints):
             id = uuid.uuid1()
@@ -52,7 +50,7 @@ class DataHandler:
         elif format == "txt":
             return self.read_txt(filename)
         else:
-            print("Incorrect file fomat\nFile needs to be in .csv or .txt format")
+            print("Incorrect file fomat!! File needs to be in .csv or .txt format")
             exit()
 
     def generate_dummy_data(self,filename, datapoints = 10000 , header = ["Category", "ID", "X", "Y"], categories = ["Alpha"], x_max=10000, y_max=10000):
@@ -61,5 +59,5 @@ class DataHandler:
         x_max = x_max
         y_max = y_max
         categories = categories
-        dummyData = self.create_data(x_max, y_max, categories, datapoints)
+        dummyData = self.generate_data(x_max, y_max, categories, datapoints)
         self.write_csv(dummyData, header, filename)
