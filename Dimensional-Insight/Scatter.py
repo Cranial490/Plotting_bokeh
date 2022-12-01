@@ -44,10 +44,16 @@ class Plot(QtWidgets.QMainWindow):
         axismarkers = []
         for mark in range(axismin,axismax+1,((axismax-axismin)//10)):
           axismarkers.append(mark)
+        #Deciding final marking on axis
+        if (self.getscale(axismax, axismin, axismax, self.gridmin, self.gridmax) - self.getscale(axismarkers[-1], axismin, axismax, self.gridmin, self.gridmax))<1:
+          axismarkers.pop()
+        axismarkers.append(axismax)
         return axismarkers
       
     def drawMarkings(self,painter,axismax,axismin,xorigin,yorigin,axis=1):
         axismarkers = self.getMarkers(int(axismin), int(axismax))
+        labelPad = 35+len(str(axismax))
+        markLen = 8
         pad = 30
         for axismark in axismarkers:
           point = self.getscale(axismark, axismin, axismax, self.gridmin, self.gridmax)
@@ -60,15 +66,15 @@ class Plot(QtWidgets.QMainWindow):
           self.pen.setColor(QtGui.QColor('#5D6D7E'))
           painter.setPen(self.pen)
           if axis:
-            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid-8, yGrid))
-            painter.drawText(QtCore.QPointF(xGrid-35,yGrid), str(int(axismark)))
+            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid-markLen, yGrid))
+            painter.drawText(QtCore.QPointF(xGrid-(labelPad),yGrid), str(int(axismark)))
             self.pen.setWidth(1)
             self.pen.setColor(QtGui.QColor('#D0D9E3'))
             painter.setPen(self.pen)
             painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid+self.gridmax+pad, yGrid))
           else:
-            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid, yGrid+8))
-            painter.drawText(QtCore.QPointF(xGrid,yGrid+20), str(int(axismark)))
+            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid, yGrid+markLen))
+            painter.drawText(QtCore.QPointF(xGrid-3,yGrid+20), str(int(axismark)))
             self.pen.setWidth(1)
             self.pen.setColor(QtGui.QColor('#D0D9E3'))
             painter.setPen(self.pen)

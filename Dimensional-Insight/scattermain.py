@@ -20,6 +20,8 @@ x=[float(row[2]) for row in data]
 y=[float(row[3]) for row in data]
 
 window = Plot(height=1100, width=1100)
+# x = [0,10,20,30,40,50,71,76]
+# y = [75,70,50,40,30,20,10,0]
 window.scatter(x, y, categories)
 window.show()
 app.exec_()
