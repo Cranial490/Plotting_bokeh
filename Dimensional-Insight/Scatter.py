@@ -3,7 +3,7 @@ from re import X
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-
+import numpy as np
 
 class Plot(QtWidgets.QMainWindow):
     def __init__(self, height=1000, width=1000, padding = 200):
@@ -31,25 +31,28 @@ class Plot(QtWidgets.QMainWindow):
         return (xorigin+x, yorigin-y)
 
     def initCanvas(self):
-      canvas = QtGui.QPixmap(self.plotheight, self.plotwidth)
-      canvas.fill(QtGui.QColor("white"))
-      self.label.setPixmap(canvas)
-      self.setCentralWidget(self.label)
+        canvas = QtGui.QPixmap(self.plotheight, self.plotwidth)
+        canvas.fill(QtGui.QColor("white"))
+        self.label.setPixmap(canvas)
+        self.setCentralWidget(self.label)
 
     def getMultiple(self, range):
-      return range//10
+        return range//10
 
     def drawPlot(self,painter,xorigin,yorigin):
-      painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin, yorigin-(self.gridmax+50)))
-      painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin + self.gridmax+50,yorigin))
+        painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin, yorigin-(self.gridmax+50)))
+        painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin + self.gridmax+50,yorigin))
 
+    def getMarkers(self,axismin,axismax):
+        axismarkers = []
+        for mark in range(axismin,axismax+1,((axismax-axismin)//10)):
+          axismarkers.append(mark)
+        return axismarkers
+      
     def drawMarkings(self,painter,axismax,axismin,xorigin,yorigin,axis=1):
-      axisrange = axismax-axismin
-      marker = self.getMultiple(axisrange)
-      axismark = axismin + marker
-      pad = 30
-      while True:
-        if axismark <= axismax+5:
+        axismarkers = self.getMarkers(int(axismin), int(axismax))
+        pad = 30
+        for axismark in axismarkers:
           point = self.getscale(axismark, axismin, axismax, self.gridmin, self.gridmax)
           if axis:
             xGrid, yGrid = self.getposition(0,point, xorigin-pad, yorigin)
@@ -73,9 +76,6 @@ class Plot(QtWidgets.QMainWindow):
             self.pen.setColor(QtGui.QColor('#D0D9E3'))
             painter.setPen(self.pen)
             painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid, yGrid-(self.gridmax+pad)))
-          axismark += marker
-        else:
-          break
     
     def drawCircles(self,painter,xdata,ydata,categdata,xmin,xmax,ymin,ymax,xorigin,yorigin, colorMap):
         for i in range(len(xdata)):
