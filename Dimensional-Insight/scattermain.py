@@ -19,7 +19,7 @@ id = [row[1] for row in data]
 x=[float(row[2]) for row in data]
 y=[float(row[3]) for row in data]
 
-window = Plot(height=1000, width=1000)
+window = Plot(height=1100, width=1100)
 # window.scatter(xdata, ydata, categories, colorMap)
 window.scatter(x, y, categories)
 window.show()

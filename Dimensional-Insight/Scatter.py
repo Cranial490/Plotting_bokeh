@@ -15,6 +15,7 @@ class Plot(QtWidgets.QMainWindow):
         self.padding = padding
         self.gridmin = 0
         self.gridmax = self.plotheight - 2*self.padding
+        self.pallete = ["#922B21", "#2471A3", "#239B56", "#76D7C4", "#F39C12", "#2C3E50", "#4A235A", "#0B5345", "#6E2C00"]
         self.initCanvas()
 
     def getscale(self,x, datamin, datamax, gridmin, gridmax):
@@ -48,7 +49,7 @@ class Plot(QtWidgets.QMainWindow):
       axismark = axismin + marker
       pad = 30
       while True:
-        if axismark <= axismax:
+        if axismark <= axismax+5:
           point = self.getscale(axismark, axismin, axismax, self.gridmin, self.gridmax)
           if axis:
             xGrid, yGrid = self.getposition(0,point, xorigin-pad, yorigin)
@@ -90,13 +91,12 @@ class Plot(QtWidgets.QMainWindow):
     def getColorMap(self,categories):
         categorySet = list(set(categories))
         colorMap = {}
-        colors = ["#922B21", "#2471A3", "#239B56", "#76D7C4", "#F39C12", "#2C3E50", "#4A235A", "#0B5345", "#6E2C00"]
         col = 0
-        if len(colors) < len(categorySet):
+        if len(self.pallete) < len(categorySet):
             print("Too many categories for now")
             exit()
         for c in categorySet:
-            colorMap[c] = colors[col]
+            colorMap[c] = self.pallete[col]
             col += 1
         return colorMap
 
