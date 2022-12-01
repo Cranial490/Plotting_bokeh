@@ -19,13 +19,8 @@ id = [row[1] for row in data]
 x=[float(row[2]) for row in data]
 y=[float(row[3]) for row in data]
 
-categorySet = list(set(categories))
-colorMap = {}
-colors = ["red", "blue", "green", "cyan", "black"]
-for c in categorySet:
-    colorMap[c] = colors.pop()
-
-window = Plot()
-window.scatter(x, y, categories, colorMap)
+window = Plot(height=1000, width=1000)
+# window.scatter(xdata, ydata, categories, colorMap)
+window.scatter(x, y, categories)
 window.show()
 app.exec_()

@@ -46,13 +46,14 @@ class Plot(QtWidgets.QMainWindow):
       axisrange = axismax-axismin
       marker = self.getMultiple(axisrange)
       axismark = axismin + marker
+      pad = 30
       while True:
         if axismark <= axismax:
           point = self.getscale(axismark, axismin, axismax, self.gridmin, self.gridmax)
           if axis:
-            xGrid, yGrid = self.getposition(0,point, xorigin, yorigin)
+            xGrid, yGrid = self.getposition(0,point, xorigin-pad, yorigin)
           else:
-            xGrid, yGrid = self.getposition(point,0, xorigin, yorigin)
+            xGrid, yGrid = self.getposition(point,0, xorigin, yorigin+pad)
 
           self.pen.setWidth(2)
           self.pen.setColor(QtGui.QColor('#5D6D7E'))
@@ -63,14 +64,14 @@ class Plot(QtWidgets.QMainWindow):
             self.pen.setWidth(1)
             self.pen.setColor(QtGui.QColor('#D0D9E3'))
             painter.setPen(self.pen)
-            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid+self.gridmax, yGrid))
+            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid+self.gridmax+pad, yGrid))
           else:
             painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid, yGrid+8))
             painter.drawText(QtCore.QPointF(xGrid,yGrid+20), str(int(axismark)))
             self.pen.setWidth(1)
             self.pen.setColor(QtGui.QColor('#D0D9E3'))
             painter.setPen(self.pen)
-            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid, yGrid-self.gridmax))
+            painter.drawLine(QtCore.QLineF(xGrid, yGrid, xGrid, yGrid-(self.gridmax+pad)))
           axismark += marker
         else:
           break
@@ -82,9 +83,24 @@ class Plot(QtWidgets.QMainWindow):
           painter.setPen(self.pen)
           x,y = self.getposition(self.getscale(xdata[i],xmin,xmax,self.gridmin,self.gridmax),self.getscale(ydata[i],ymin,ymax,self.gridmin,self.gridmax), xorigin,yorigin)
           painter.drawPoint(QtCore.QPointF(x,y))
-          # painter.drawEllipse(QtCore.QPointF(x,y), 1,1)
+          self.pen.setColor(QtGui.QColor("black"))
+          painter.setPen(self.pen)
+          painter.drawEllipse(QtCore.QPointF(x,y), 1,1)
 
-    def scatter(self, xdata, ydata, categories=None, colorMap=None):
+    def getColorMap(self,categories):
+        categorySet = list(set(categories))
+        colorMap = {}
+        colors = ["#922B21", "#2471A3", "#239B56", "#76D7C4", "#F39C12", "#2C3E50", "#4A235A", "#0B5345", "#6E2C00"]
+        col = 0
+        if len(colors) < len(categorySet):
+            print("Too many categories for now")
+            exit()
+        for c in categorySet:
+            colorMap[c] = colors[col]
+            col += 1
+        return colorMap
+
+    def scatter(self, xdata, ydata, categories=None):
         xmin = min(xdata)
         xmax = max(xdata)
         ymin = min(ydata)
@@ -99,17 +115,13 @@ class Plot(QtWidgets.QMainWindow):
         self.pen.setWidth(2)
         self.pen.setColor(QtGui.QColor('#5D6D7E'))
         painter.setPen(self.pen)
-        self.drawPlot(painter, xorigin, yorigin)
+        self.drawPlot(painter, xorigin-30, yorigin+30)
         self.drawMarkings(painter, ymax, ymin, xorigin, yorigin, 1)
         self.drawMarkings(painter, xmax, xmin, xorigin, yorigin, 0)
-        self.drawCircles(painter, xdata, ydata, categories, xmin, xmax,ymin, ymax, xorigin, yorigin, colorMap)
+        self.drawCircles(painter, xdata, ydata, categories, xmin, xmax,ymin, ymax, xorigin, yorigin, self.getColorMap(categories))
         painter.end()
 
 xdata = [0,10,20,30,40]
 ydata = [40,30,20,10,0]
 
 app = QtWidgets.QApplication(sys.argv)
-# window = Plot()
-# window.scatter(xdata, ydata)
-# window.show()
-# app.exec_()
