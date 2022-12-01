@@ -36,9 +36,6 @@ class Plot(QtWidgets.QMainWindow):
         self.label.setPixmap(canvas)
         self.setCentralWidget(self.label)
 
-    def getMultiple(self, range):
-        return range//10
-
     def drawPlot(self,painter,xorigin,yorigin):
         painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin, yorigin-(self.gridmax+50)))
         painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin + self.gridmax+50,yorigin))
@@ -105,7 +102,7 @@ class Plot(QtWidgets.QMainWindow):
         xmax = max(xdata)
         ymin = min(ydata)
         ymax = max(ydata)
-        #determining plot origin.
+
         xorigin = self.padding
         yorigin = self.plotheight-self.padding
 
@@ -120,8 +117,5 @@ class Plot(QtWidgets.QMainWindow):
         self.drawMarkings(painter, xmax, xmin, xorigin, yorigin, 0)
         self.drawCircles(painter, xdata, ydata, categories, xmin, xmax,ymin, ymax, xorigin, yorigin, self.getColorMap(categories))
         painter.end()
-
-xdata = [0,10,20,30,40]
-ydata = [40,30,20,10,0]
 
 app = QtWidgets.QApplication(sys.argv)
