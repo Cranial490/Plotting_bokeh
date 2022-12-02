@@ -17,7 +17,7 @@ dh = DataHandler()
 
 # Generate CSV file with random data
 if args.g:
-    dh.generate_dummy_data("dummy.csv", categories=["A", "G", "B", "C"], datapoints=10000)
+    dh.generate_dummy_data("dummy.csv", categories=["A", "G", "B", "C","F"], datapoints=1000)
 
 #Read csv or txt file and process
 data = dh.read_data(args.filename)

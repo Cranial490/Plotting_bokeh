@@ -4,6 +4,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import numpy as np
+from regex import P
 
 class Plot(QtWidgets.QMainWindow):
     def __init__(self, height=1000, width=1000, padding = 200):
@@ -36,9 +37,14 @@ class Plot(QtWidgets.QMainWindow):
         self.label.setPixmap(canvas)
         self.setCentralWidget(self.label)
 
-    def drawPlot(self,painter,xorigin,yorigin):
-        painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin, yorigin-(self.gridmax+50)))
-        painter.drawLine(QtCore.QLineF(xorigin, yorigin, xorigin + self.gridmax+50,yorigin))
+    def drawPlot(self,painter,xmin,xmax,ymin,ymax,xorigin,yorigin):
+        pad = 30
+        xaxisOrigin = xorigin-pad
+        yaxisOrigin = yorigin+pad
+        painter.drawLine(QtCore.QLineF(xaxisOrigin, yaxisOrigin, xaxisOrigin, yaxisOrigin-(self.gridmax+50)))
+        painter.drawLine(QtCore.QLineF(xaxisOrigin, yaxisOrigin, xaxisOrigin + self.gridmax+50,yaxisOrigin))
+        self.drawMarkings(painter, ymax, ymin, xorigin, yorigin, 1)
+        self.drawMarkings(painter, xmax, xmin, xorigin, yorigin, 0)
 
     def getMarkers(self,axismin,axismax):
         axismarkers = []
@@ -108,7 +114,6 @@ class Plot(QtWidgets.QMainWindow):
         xmax = max(xdata)
         ymin = min(ydata)
         ymax = max(ydata)
-
         xorigin = self.padding
         yorigin = self.plotheight-self.padding
 
@@ -118,9 +123,7 @@ class Plot(QtWidgets.QMainWindow):
         self.pen.setWidth(2)
         self.pen.setColor(QtGui.QColor('#5D6D7E'))
         painter.setPen(self.pen)
-        self.drawPlot(painter, xorigin-30, yorigin+30)
-        self.drawMarkings(painter, ymax, ymin, xorigin, yorigin, 1)
-        self.drawMarkings(painter, xmax, xmin, xorigin, yorigin, 0)
+        self.drawPlot(painter, xmin, xmax, ymin, ymax, xorigin, yorigin)
         self.drawCircles(painter, xdata, ydata, categories, xmin, xmax,ymin, ymax, xorigin, yorigin, self.getColorMap(categories))
         painter.end()
 
